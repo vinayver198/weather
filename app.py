@@ -67,15 +67,9 @@ def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
     city = parameters.get("geo-city")
-    type_of_weather = parameters.get("weathertype")
     if city is None:
-        
-        if type_of_weather is None:
-            return None
-        else:
-            city = Bangalore
-            return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
-     
+        return None
+
     return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
 
 
@@ -107,9 +101,6 @@ def makeWebhookResult(data):
     speech = "Today the weather in " + location.get('city') + ": " + condition.get('text') + \
              ", And the temperature is " + condition.get('temp') + " " + units.get('temperature')
 
-    speech1 = "Today the weather in " + location.get('city') + ": " + condition.get('text')
-
-    if city is None:
     print("Response:")
     print(speech)
 
@@ -120,17 +111,7 @@ def makeWebhookResult(data):
         # "contextOut": [],
         "source": "apiai-weather-webhook-sample"
     }
-    else:
-    print("Response:")
-    print(speech)
 
-    return {
-        "speech": speech1,
-        "displayText": speech,
-        # "data": data,
-        # "contextOut": [],
-        "source": "apiai-weather-webhook-sample"
-    }
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
